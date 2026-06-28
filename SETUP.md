@@ -1,6 +1,6 @@
 # 部署指南
 
-本目录是方案 B 的完整中心化同步 Hub，应部署到独立仓库 `SourceDive/fork-sync-hub`。
+本目录是统一后的同步 Hub，应部署到仓库 `SourceDive/fork-sync-hub`。它同时是可复用的 Composite Action（根目录 `action.yml`，供方案 A 通过 `SourceDive/fork-sync-hub@v1` 调用）和方案 B 的中心化调度 Hub。原 `SourceDive/sync-fork` 独立仓库已合并到此处。
 
 ## 1. 创建仓库
 
@@ -45,3 +45,18 @@ Organization Secret 会自动被本仓库及所有 fork 使用。
 python3 scripts/generate-forks-config.py
 git add forks.json && git commit -m "chore: update forks.json" && git push
 ```
+
+## 6. 发布 Action 版本（方案 A 需要）
+
+方案 A 的 fork 通过 `SourceDive/fork-sync-hub@v1` 引用本仓库根目录的 `action.yml`，因此需要发布并维护一个 `v1` 移动标签：
+
+```bash
+git tag -f v1
+git push -f origin v1
+```
+
+每次更新 `action.yml` 后，将 `v1` 标签重新指向最新提交即可让所有方案 A 的 fork 生效。
+
+## 7. 下线旧仓库 `SourceDive/sync-fork`
+
+原独立 action 仓库已合并到此处。建议在其 README 顶部注明「已迁移到 `SourceDive/fork-sync-hub`」并归档（Archive）该仓库，避免两处维护。

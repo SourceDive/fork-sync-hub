@@ -45,7 +45,7 @@ jobs:
       sync_branches: ${{ steps.set-flags.outputs.sync_branches }}
       branch_sync_mode: ${{ steps.set-flags.outputs.branch_sync_mode }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - id: set-flags
         run: |
@@ -88,10 +88,10 @@ jobs:
         include: ${{ fromJson(needs.prepare.outputs.matrix) }}
     steps:
       - name: Checkout hub action
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Checkout fork
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ matrix.fork }}
           token: ${{ secrets.SYNC_FORK_TOKEN }}

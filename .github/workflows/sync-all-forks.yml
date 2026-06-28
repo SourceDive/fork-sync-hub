@@ -1,0 +1,101 @@
+name: Sync All Forks
+
+on:
+  schedule:
+    # 每天 UTC 0:00（北京时间 8:00）
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      fork_filter:
+        description: 可选，按 fork 名称过滤（如 spring-ai）
+        required: false
+        default: ''
+      sync_tags:
+        description: 是否同步 tags
+        type: boolean
+        default: true
+      sync_branches:
+        description: 是否同步分支
+        type: boolean
+        default: true
+      skip_workflow_tags_on_error:
+        description: tag 因 workflow 权限被拒时跳过并继续（临时方案，建议修复 PAT）
+        type: boolean
+        default: false
+
+concurrency:
+  group: sync-all-forks
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      sync_tags: ${{ steps.set-flags.outputs.sync_tags }}
+      sync_branches: ${{ steps.set-flags.outputs.sync_branches }}
+      skip_workflow_tags_on_error: ${{ steps.set-flags.outputs.skip_workflow_tags_on_error }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: set-flags
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "sync_tags=${{ inputs.sync_tags }}" >> "$GITHUB_OUTPUT"
+            echo "sync_branches=${{ inputs.sync_branches }}" >> "$GITHUB_OUTPUT"
+            echo "skip_workflow_tags_on_error=${{ inputs.skip_workflow_tags_on_error }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "sync_tags=true" >> "$GITHUB_OUTPUT"
+            echo "sync_branches=true" >> "$GITHUB_OUTPUT"
+            echo "skip_workflow_tags_on_error=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - id: set-matrix
+        run: |
+          FILTER="${{ github.event.inputs.fork_filter }}"
+          if [ -n "$FILTER" ]; then
+            MATRIX=$(jq -c --arg f "$FILTER" '[.[] | select(.fork | test($f))]' forks.json)
+          else
+            MATRIX=$(jq -c '.' forks.json)
+          fi
+          COUNT=$(echo "$MATRIX" | jq 'length')
+          echo "将同步 ${COUNT} 个 fork 仓库"
+          {
+            echo "matrix<<EOF"
+            echo "$MATRIX"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+  sync:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        include: ${{ fromJson(needs.prepare.outputs.matrix) }}
+    steps:
+      - name: Checkout hub action
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github/actions/sync-fork
+          sparse-checkout-cone-mode: false
+
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.fork }}
+          token: ${{ secrets.SYNC_FORK_TOKEN }}
+          fetch-depth: 0
+          path: repo
+
+      - uses: ./.github/actions/sync-fork
+        with:
+          upstream_repo: ${{ matrix.upstream }}
+          github_token: ${{ secrets.SYNC_FORK_TOKEN }}
+          sync_tags: ${{ needs.prepare.outputs.sync_tags }}
+          sync_branches: ${{ needs.prepare.outputs.sync_branches }}
+          target_branch: ${{ matrix.target_branch }}
+          skip_workflow_tags_on_error: ${{ needs.prepare.outputs.skip_workflow_tags_on_error }}
+          working_directory: repo

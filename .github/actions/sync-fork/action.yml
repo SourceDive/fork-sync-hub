@@ -1,0 +1,133 @@
+name: Sync Fork from Upstream
+description: 将上游仓库的 tags 和分支同步到 fork 仓库
+
+inputs:
+  upstream_repo:
+    description: 上游仓库，格式 owner/repo（如 spring-projects/spring-ai）
+    required: true
+  github_token:
+    description: Classic PAT，需 repo + workflow 权限（不能用 GitHub App token）
+    required: true
+  sync_tags:
+    description: 是否同步 tags
+    required: false
+    default: 'true'
+  sync_branches:
+    description: 是否同步分支
+    required: false
+    default: 'false'
+  target_branch:
+    description: 要同步的分支名，多个用逗号分隔。仅 sync_branches=true 时生效
+    required: false
+    default: 'main'
+  skip_workflow_tags_on_error:
+    description: tag 因 workflow 权限被拒时是否跳过并继续
+    required: false
+    default: 'false'
+  working_directory:
+    description: fork 仓库的本地路径
+    required: false
+    default: '.'
+
+runs:
+  using: composite
+  steps:
+    - name: Validate token
+      shell: bash
+      env:
+        TOKEN: ${{ inputs.github_token }}
+      run: |
+        set -euo pipefail
+
+        if [ -z "${TOKEN}" ]; then
+          echo "::error::SYNC_FORK_TOKEN 未配置。请在 Organization Secrets 中添加 Classic PAT。"
+          exit 1
+        fi
+
+        HEADERS=$(curl -sI -H "Authorization: token ${TOKEN}" https://api.github.com/user)
+        SCOPES=$(echo "${HEADERS}" | grep -i '^x-oauth-scopes:' | cut -d: -f2- | xargs || true)
+        TOKEN_TYPE=$(echo "${HEADERS}" | grep -i '^github-authentication-token-expiration:' | cut -d: -f2- | xargs || true)
+
+        if [ -n "${SCOPES}" ]; then
+          echo "Token scopes: ${SCOPES}"
+          if ! echo "${SCOPES}" | grep -qi workflow; then
+            echo "::error::Token 缺少 workflow 权限。请使用 Classic PAT 并勾选 workflow scope。"
+            echo "::error::创建地址: https://github.com/settings/tokens/new?scopes=repo,workflow"
+            exit 1
+          fi
+        else
+          echo "::notice::未检测到 Classic PAT scopes，请确认 Fine-grained PAT 已授予 Workflows: Read and write"
+        fi
+
+    - name: Sync from upstream
+      shell: bash
+      working-directory: ${{ inputs.working_directory }}
+      env:
+        TOKEN: ${{ inputs.github_token }}
+        SKIP_WORKFLOW_TAGS: ${{ inputs.skip_workflow_tags_on_error }}
+      run: |
+        set -euo pipefail
+
+        UPSTREAM_URL="https://github.com/${{ inputs.upstream_repo }}.git"
+
+        echo "🔗 上游仓库: ${UPSTREAM_URL}"
+        echo "📌 当前 fork: $(git remote get-url origin)"
+
+        ORIGIN_URL=$(git remote get-url origin)
+        REPO_PATH=$(echo "${ORIGIN_URL}" | sed 's|.*github\.com[:/]||; s|\.git$||; s|x-access-token:[^@]*@||')
+        git remote set-url origin "https://x-access-token:${TOKEN}@github.com/${REPO_PATH}.git"
+
+        git remote add upstream "${UPSTREAM_URL}" 2>/dev/null || git remote set-url upstream "${UPSTREAM_URL}"
+
+        echo "⬇️ 拉取上游 tags..."
+        git fetch upstream --tags --force
+
+        if [ "${{ inputs.sync_tags }}" = "true" ]; then
+          echo "⬆️ 推送 tags 到 fork..."
+          FAILED_TAGS=0
+          SKIPPED_TAGS=0
+          PUSHED_TAGS=0
+
+          while IFS= read -r TAG; do
+            [ -z "${TAG}" ] && continue
+            LOG_FILE=$(mktemp)
+            if git push origin "refs/tags/${TAG}" --force >"${LOG_FILE}" 2>&1; then
+              PUSHED_TAGS=$((PUSHED_TAGS + 1))
+            elif grep -q "without \`workflows\` permission" "${LOG_FILE}"; then
+              SKIPPED_TAGS=$((SKIPPED_TAGS + 1))
+              echo "::warning::跳过 tag ${TAG}：token 缺少 workflow 权限"
+              cat "${LOG_FILE}"
+              if [ "${SKIP_WORKFLOW_TAGS}" != "true" ]; then
+                FAILED_TAGS=$((FAILED_TAGS + 1))
+              fi
+            else
+              echo "::error::推送 tag ${TAG} 失败"
+              cat "${LOG_FILE}"
+              rm -f "${LOG_FILE}"
+              exit 1
+            fi
+            rm -f "${LOG_FILE}"
+          done < <(git tag -l)
+
+          echo "Tags 结果: 成功 ${PUSHED_TAGS}, 跳过 ${SKIPPED_TAGS}, 失败 ${FAILED_TAGS}"
+          if [ "${FAILED_TAGS}" -gt 0 ]; then
+            echo "::error::有 ${FAILED_TAGS} 个 tag 因 workflow 权限不足而失败。请更换 Classic PAT（repo + workflow）后重试。"
+            exit 1
+          fi
+          echo "✅ Tags 同步完成"
+        fi
+
+        if [ "${{ inputs.sync_branches }}" = "true" ]; then
+          IFS=',' read -ra BRANCHES <<< "${{ inputs.target_branch }}"
+          for BRANCH in "${BRANCHES[@]}"; do
+            BRANCH=$(echo "$BRANCH" | xargs)
+            echo "⬇️ 拉取上游分支: ${BRANCH}"
+            git fetch upstream "${BRANCH}:upstream-${BRANCH}" --force
+            echo "⬆️ 推送分支到 fork: ${BRANCH}"
+            if ! git push origin "upstream-${BRANCH}:refs/heads/${BRANCH}" --force; then
+              echo "::error::推送分支 ${BRANCH} 失败，请确认 token 具有 workflow 权限"
+              exit 1
+            fi
+          done
+          echo "✅ 分支同步完成"
+        fi

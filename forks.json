@@ -1,0 +1,587 @@
+[
+  {
+    "fork": "SourceDive/agents",
+    "upstream": "cloudflare/agents",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/alipay-sdk-java-all",
+    "upstream": "alipay/alipay-sdk-java-all",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/aspectj",
+    "upstream": "eclipse-aspectj/aspectj",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/bitcoin",
+    "upstream": "bitcoin/bitcoin",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/bitcoinj",
+    "upstream": "bitcoinj/bitcoinj",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/ByteTCC",
+    "upstream": "liuyangming/ByteTCC",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/caffeine",
+    "upstream": "ben-manes/caffeine",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/canal",
+    "upstream": "alibaba/canal",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/cglib",
+    "upstream": "cglib/cglib",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/common-annotations-api",
+    "upstream": "jakartaee/common-annotations-api",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/commons-dbcp",
+    "upstream": "apache/commons-dbcp",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/curator",
+    "upstream": "apache/curator",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/data-check",
+    "upstream": "starslink/data-check",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/dax-pay",
+    "upstream": "dromara/dax-pay",
+    "target_branch": "dev"
+  },
+  {
+    "fork": "SourceDive/disruptor",
+    "upstream": "LMAX-Exchange/disruptor",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/druid",
+    "upstream": "alibaba/druid",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/dubbo",
+    "upstream": "apache/dubbo",
+    "target_branch": "3.3"
+  },
+  {
+    "fork": "SourceDive/dubbo-spring-boot-project",
+    "upstream": "apache/dubbo-spring-boot-project",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/dynamic-datasource",
+    "upstream": "baomidou/dynamic-datasource",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/dynamic-tp",
+    "upstream": "dromara/dynamic-tp",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/ehcache3",
+    "upstream": "ehcache/ehcache3",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/elasticsearch",
+    "upstream": "elastic/elasticsearch",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/embabel-agent",
+    "upstream": "embabel/embabel-agent",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/eureka",
+    "upstream": "Netflix/eureka",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/feign",
+    "upstream": "OpenFeign/feign",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/ftgo-application",
+    "upstream": "microservices-patterns/ftgo-application",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/guava",
+    "upstream": "google/guava",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/guice",
+    "upstream": "google/guice",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/h2database",
+    "upstream": "h2database/h2database",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/HikariCP",
+    "upstream": "brettwooldridge/HikariCP",
+    "target_branch": "dev"
+  },
+  {
+    "fork": "SourceDive/hippo4j",
+    "upstream": "opengoofy/hippo4j",
+    "target_branch": "develop"
+  },
+  {
+    "fork": "SourceDive/hmily",
+    "upstream": "dromara/hmily",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/hutool",
+    "upstream": "chinabugotech/hutool",
+    "target_branch": "v5-master"
+  },
+  {
+    "fork": "SourceDive/hyperswitch",
+    "upstream": "juspay/hyperswitch",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/Hystrix",
+    "upstream": "Netflix/Hystrix",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/IJPay",
+    "upstream": "Javen205/IJPay",
+    "target_branch": "dev"
+  },
+  {
+    "fork": "SourceDive/incubator-kie-drools",
+    "upstream": "apache/incubator-kie-drools",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/incubator-seata",
+    "upstream": "apache/incubator-seata",
+    "target_branch": "2.x"
+  },
+  {
+    "fork": "SourceDive/incubator-seata-samples",
+    "upstream": "apache/incubator-seata-samples",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/initializr",
+    "upstream": "spring-io/initializr",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/javassist",
+    "upstream": "jboss-javassist/javassist",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/javax.transaction",
+    "upstream": "javaee/javax.transaction",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/JCTools",
+    "upstream": "JCTools/JCTools",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/jdk",
+    "upstream": "openjdk/jdk",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/jedis",
+    "upstream": "redis/jedis",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/jeepay",
+    "upstream": "jeequan/jeepay",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/jetcache",
+    "upstream": "alibaba/jetcache",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/jPOS",
+    "upstream": "jpos/jPOS",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/junit-framework",
+    "upstream": "junit-team/junit-framework",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/kafka",
+    "upstream": "apache/kafka",
+    "target_branch": "trunk"
+  },
+  {
+    "fork": "SourceDive/keycloak",
+    "upstream": "keycloak/keycloak",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/killbill",
+    "upstream": "killbill/killbill",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/lombok",
+    "upstream": "projectlombok/lombok",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/Mindustry",
+    "upstream": "Anuken/Mindustry",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/mybatis-3",
+    "upstream": "mybatis/mybatis-3",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/mybatis-plus",
+    "upstream": "baomidou/mybatis-plus",
+    "target_branch": "3.0"
+  },
+  {
+    "fork": "SourceDive/mybatis-plus-samples",
+    "upstream": "baomidou/mybatis-plus-samples",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/mysql-binlog-connector-java",
+    "upstream": "shyiko/mysql-binlog-connector-java",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/mysql-connector-j",
+    "upstream": "mysql/mysql-connector-j",
+    "target_branch": "release/9.x"
+  },
+  {
+    "fork": "SourceDive/mysql-server",
+    "upstream": "mysql/mysql-server",
+    "target_branch": "trunk"
+  },
+  {
+    "fork": "SourceDive/nacos",
+    "upstream": "alibaba/nacos",
+    "target_branch": "develop"
+  },
+  {
+    "fork": "SourceDive/nacos-spring-project",
+    "upstream": "nacos-group/nacos-spring-project",
+    "target_branch": "develop"
+  },
+  {
+    "fork": "SourceDive/netty",
+    "upstream": "netty/netty",
+    "target_branch": "4.2"
+  },
+  {
+    "fork": "SourceDive/openmessaging-java",
+    "upstream": "openmessaging/openmessaging-java",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/parent",
+    "upstream": "mybatis/parent",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/pay-java-parent",
+    "upstream": "egzosn/pay-java-parent",
+    "target_branch": "develop"
+  },
+  {
+    "fork": "SourceDive/playground-flight-booking",
+    "upstream": "tzolov/playground-flight-booking",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/radar",
+    "upstream": "wfh45678/radar",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/redisson",
+    "upstream": "redisson/redisson",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/redisson-examples",
+    "upstream": "redisson/redisson-examples",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/rocketmq",
+    "upstream": "apache/rocketmq",
+    "target_branch": "develop"
+  },
+  {
+    "fork": "SourceDive/rocketmq-spring",
+    "upstream": "apache/rocketmq-spring",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/roncoo-pay",
+    "upstream": "roncoo/roncoo-pay",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/Sentinel",
+    "upstream": "alibaba/Sentinel",
+    "target_branch": "1.8"
+  },
+  {
+    "fork": "SourceDive/shardingsphere",
+    "upstream": "apache/shardingsphere",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/skills-service",
+    "upstream": "NationalSecurityAgency/skills-service",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/skywalking",
+    "upstream": "apache/skywalking",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/sofa-bolt",
+    "upstream": "sofastack/sofa-bolt",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/sofa-boot",
+    "upstream": "sofastack/sofa-boot",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/sofa-jraft",
+    "upstream": "sofastack/sofa-jraft",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/sofa-registry",
+    "upstream": "sofastack/sofa-registry",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/sofa-rpc",
+    "upstream": "sofastack/sofa-rpc",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/spring",
+    "upstream": "mybatis/spring",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/spring-ai",
+    "upstream": "spring-projects/spring-ai",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-batch",
+    "upstream": "spring-projects/spring-batch",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-boot",
+    "upstream": "spring-projects/spring-boot",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-cloud-alibaba",
+    "upstream": "alibaba/spring-cloud-alibaba",
+    "target_branch": "2025.1.x"
+  },
+  {
+    "fork": "SourceDive/spring-cloud-build",
+    "upstream": "spring-cloud/spring-cloud-build",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-cloud-bus",
+    "upstream": "spring-cloud/spring-cloud-bus",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-cloud-circuitbreaker",
+    "upstream": "spring-cloud/spring-cloud-circuitbreaker",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-cloud-commons",
+    "upstream": "spring-cloud/spring-cloud-commons",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-cloud-config",
+    "upstream": "spring-cloud/spring-cloud-config",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-cloud-gateway",
+    "upstream": "spring-cloud/spring-cloud-gateway",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-cloud-netflix",
+    "upstream": "spring-cloud/spring-cloud-netflix",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-cloud-openfeign",
+    "upstream": "spring-cloud/spring-cloud-openfeign",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-cloud-sleuth",
+    "upstream": "spring-attic/spring-cloud-sleuth",
+    "target_branch": "3.1.x"
+  },
+  {
+    "fork": "SourceDive/spring-cloud-tencent",
+    "upstream": "Tencent/spring-cloud-tencent",
+    "target_branch": "2024"
+  },
+  {
+    "fork": "SourceDive/spring-data-elasticsearch",
+    "upstream": "spring-projects/spring-data-elasticsearch",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-data-keyvalue",
+    "upstream": "spring-projects/spring-data-keyvalue",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-data-relational",
+    "upstream": "spring-projects/spring-data-relational",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-framework",
+    "upstream": "spring-projects/spring-framework",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-kafka",
+    "upstream": "spring-projects/spring-kafka",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-loaded",
+    "upstream": "spring-projects/spring-loaded",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/spring-petclinic",
+    "upstream": "spring-projects/spring-petclinic",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-retry",
+    "upstream": "spring-projects/spring-retry",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-security",
+    "upstream": "spring-projects/spring-security",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-security-samples",
+    "upstream": "spring-projects/spring-security-samples",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-session",
+    "upstream": "spring-projects/spring-session",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/spring-statemachine",
+    "upstream": "spring-projects/spring-statemachine",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/squirrel",
+    "upstream": "hekailiang/squirrel",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/stateless4j",
+    "upstream": "stateless4j/stateless4j",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/TencentKona-8",
+    "upstream": "Tencent/TencentKona-8",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/tomcat",
+    "upstream": "apache/tomcat",
+    "target_branch": "main"
+  },
+  {
+    "fork": "SourceDive/transactions",
+    "upstream": "jakartaee/transactions",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/transmittable-thread-local",
+    "upstream": "alibaba/transmittable-thread-local",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/xxl-job",
+    "upstream": "xuxueli/xxl-job",
+    "target_branch": "master"
+  },
+  {
+    "fork": "SourceDive/zookeeper",
+    "upstream": "apache/zookeeper",
+    "target_branch": "master"
+  }
+]

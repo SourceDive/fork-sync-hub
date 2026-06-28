@@ -29,7 +29,7 @@ on:
           - force
           - merge
           - rebase
-        default: force
+        default: merge
 
 concurrency:
   group: sync-all-forks

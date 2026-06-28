@@ -1,0 +1,54 @@
+# 将此文件复制到你的 fork 仓库的 .github/workflows/ 目录下
+# 修改 UPSTREAM_REPO 等环境变量为你的实际值
+
+name: Sync Fork from Upstream
+
+on:
+  schedule:
+    # 每天 UTC 0:00 执行（北京时间 8:00）
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      sync_tags:
+        description: 是否同步 tags
+        type: boolean
+        default: true
+      sync_branches:
+        description: 是否同步分支
+        type: boolean
+        default: false
+
+env:
+  UPSTREAM_REPO: spring-projects/spring-ai
+  # 分支同步方式：merge | rebase | force
+  BRANCH_SYNC_MODE: merge
+  # 要同步的分支，多个用逗号分隔；留空则自动探测上游默认分支
+  TARGET_BRANCH: ''
+
+# 避免定时任务与手动触发并发执行导致互相覆盖
+concurrency:
+  group: sync-fork-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync from upstream
+        uses: SourceDive/fork-sync-hub@v1
+        with:
+          upstream_repo: ${{ env.UPSTREAM_REPO }}
+          github_token: ${{ secrets.SYNC_FORK_TOKEN }}
+          # 定时触发时 inputs 为空，默认同步 tags、不同步分支
+          sync_tags: ${{ github.event.inputs.sync_tags || 'true' }}
+          sync_branches: ${{ github.event.inputs.sync_branches || 'false' }}
+          target_branch: ${{ env.TARGET_BRANCH }}
+          branch_sync_mode: ${{ env.BRANCH_SYNC_MODE }}

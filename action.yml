@@ -1,0 +1,146 @@
+name: Sync Fork from Upstream
+description: 将上游仓库的 tags 和分支同步到 fork 仓库
+
+inputs:
+  upstream_repo:
+    description: 上游仓库，格式 owner/repo（如 spring-projects/spring-ai）
+    required: true
+  github_token:
+    description: GitHub Personal Access Token，需要有 repo + workflow 权限
+    required: true
+  sync_tags:
+    description: 是否同步 tags
+    required: false
+    default: 'true'
+  tag_force:
+    description: 推送 tags 时是否强制覆盖 fork 上已存在的同名 tag
+    required: false
+    default: 'false'
+  sync_branches:
+    description: 是否同步分支
+    required: false
+    default: 'false'
+  target_branch:
+    description: 要同步的分支名，多个用逗号分隔。留空则自动探测上游默认分支。仅 sync_branches=true 时生效
+    required: false
+    default: ''
+  branch_sync_mode:
+    description: 分支同步方式，可选 merge | rebase | force。merge/rebase 会保留 fork 自有提交，force 会用上游覆盖
+    required: false
+    default: 'merge'
+  git_user_name:
+    description: merge/rebase 模式下生成提交所用的 git 用户名
+    required: false
+    default: 'github-actions[bot]'
+  git_user_email:
+    description: merge/rebase 模式下生成提交所用的 git 邮箱
+    required: false
+    default: '41898282+github-actions[bot]@users.noreply.github.com'
+  working_directory:
+    description: fork 仓库的本地路径（中心化调度时指向 fork 检出目录，单仓库使用保持默认）
+    required: false
+    default: '.'
+
+runs:
+  using: composite
+  steps:
+    - name: Sync from upstream
+      shell: bash
+      working-directory: ${{ inputs.working_directory }}
+      env:
+        TOKEN: ${{ inputs.github_token }}
+        UPSTREAM_REPO: ${{ inputs.upstream_repo }}
+        SYNC_TAGS: ${{ inputs.sync_tags }}
+        TAG_FORCE: ${{ inputs.tag_force }}
+        SYNC_BRANCHES: ${{ inputs.sync_branches }}
+        TARGET_BRANCH: ${{ inputs.target_branch }}
+        BRANCH_SYNC_MODE: ${{ inputs.branch_sync_mode }}
+        GIT_USER_NAME: ${{ inputs.git_user_name }}
+        GIT_USER_EMAIL: ${{ inputs.git_user_email }}
+      run: |
+        set -euo pipefail
+
+        UPSTREAM_URL="https://github.com/${UPSTREAM_REPO}.git"
+
+        echo "🔗 上游仓库: ${UPSTREAM_URL}"
+        echo "📌 当前 fork: $(git remote get-url origin)"
+
+        # 用 PAT 替换 origin URL 以获得完整推送权限
+        ORIGIN_URL=$(git remote get-url origin)
+        REPO_PATH=$(echo "${ORIGIN_URL}" | sed 's|.*github\.com[:/]||; s|\.git$||')
+        git remote set-url origin "https://x-access-token:${TOKEN}@github.com/${REPO_PATH}.git"
+
+        git remote add upstream "${UPSTREAM_URL}" 2>/dev/null || git remote set-url upstream "${UPSTREAM_URL}"
+
+        # merge/rebase 生成提交需要 git 身份
+        git config user.name "${GIT_USER_NAME}"
+        git config user.email "${GIT_USER_EMAIL}"
+
+        echo "⬇️ 拉取上游..."
+        git fetch upstream --tags --force
+
+        if [ "${SYNC_TAGS}" = "true" ]; then
+          if [ "${TAG_FORCE}" = "true" ]; then
+            echo "⬆️ 推送 tags 到 fork（强制覆盖）..."
+            git push origin --tags --force
+          else
+            echo "⬆️ 推送 tags 到 fork（保留已存在的同名 tag）..."
+            git push origin --tags
+          fi
+          echo "✅ Tags 同步完成"
+        fi
+
+        if [ "${SYNC_BRANCHES}" = "true" ]; then
+          if [ -z "${TARGET_BRANCH}" ]; then
+            DEFAULT_BRANCH=$(git remote show upstream | sed -n 's/.*HEAD branch: //p')
+            if [ -z "${DEFAULT_BRANCH}" ]; then
+              echo "❌ 无法探测上游默认分支，请显式设置 target_branch"
+              exit 1
+            fi
+            echo "ℹ️ 未指定 target_branch，自动探测上游默认分支: ${DEFAULT_BRANCH}"
+            TARGET_BRANCH="${DEFAULT_BRANCH}"
+          fi
+
+          case "${BRANCH_SYNC_MODE}" in
+            merge|rebase|force) ;;
+            *)
+              echo "❌ 未知 branch_sync_mode: '${BRANCH_SYNC_MODE}'（可选 merge | rebase | force）"
+              exit 1
+              ;;
+          esac
+
+          IFS=',' read -ra BRANCHES <<< "${TARGET_BRANCH}"
+          for BRANCH in "${BRANCHES[@]}"; do
+            BRANCH=$(echo "$BRANCH" | xargs)
+            [ -z "$BRANCH" ] && continue
+
+            echo "⬇️ 拉取上游分支: ${BRANCH}"
+            git fetch upstream "${BRANCH}:refs/remotes/upstream/${BRANCH}" --force
+
+            if [ "${BRANCH_SYNC_MODE}" = "force" ]; then
+              echo "⬆️ [force] 用上游覆盖推送分支到 fork: ${BRANCH}"
+              git push origin "refs/remotes/upstream/${BRANCH}:refs/heads/${BRANCH}" --force
+            else
+              echo "🔀 [${BRANCH_SYNC_MODE}] 合并上游到 fork 分支: ${BRANCH}"
+              if git show-ref --verify --quiet "refs/heads/${BRANCH}"; then
+                git checkout "${BRANCH}"
+              elif git ls-remote --exit-code --heads origin "${BRANCH}" >/dev/null 2>&1; then
+                git fetch origin "${BRANCH}:refs/remotes/origin/${BRANCH}" --force
+                git checkout -B "${BRANCH}" "refs/remotes/origin/${BRANCH}"
+              else
+                echo "ℹ️ fork 上不存在分支 ${BRANCH}，将基于上游创建"
+                git checkout -B "${BRANCH}" "refs/remotes/upstream/${BRANCH}"
+              fi
+
+              if [ "${BRANCH_SYNC_MODE}" = "merge" ]; then
+                git merge --no-edit "refs/remotes/upstream/${BRANCH}"
+              else
+                git rebase "refs/remotes/upstream/${BRANCH}"
+              fi
+
+              echo "⬆️ 推送分支到 fork: ${BRANCH}"
+              git push origin "HEAD:refs/heads/${BRANCH}"
+            fi
+          done
+          echo "✅ 分支同步完成"
+        fi
